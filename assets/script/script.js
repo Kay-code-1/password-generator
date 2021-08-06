@@ -1,4 +1,5 @@
 var numChoice, upperCaseChoice, lowerCaseChoice, specialCharChoice;
+var userOptions, passLength;
 
 // Array of special characters
 var specialChars = [
@@ -147,6 +148,25 @@ function generatePassword() {
 
   let userPosChars = [];
   const tmpPwd = [];
+  let choiceCount = 0, fixedChar = 0;
+
+  if (userOptions.specialCharChoice) {
+    choiceCount++;
+  }
+
+  if (userOptions.numChoice) {
+    choiceCount++;
+  }
+
+  if (userOptions.lowerCaseChoice) {
+    choiceCount++;
+  }
+
+  if (userOptions.upperCaseChoice) {
+    choiceCount++;
+  }
+
+  fixedChar = choiceCount > 2 ? choiceCount : 0;
 
   if (
     !userOptions.specialCharChoice &&
@@ -158,7 +178,8 @@ function generatePassword() {
       "Please select atleast one choice among Number, Letters and Special Characters!"
     );
   } else {
-    for (let i = 0; i < userOptions.passLength; i++) {
+    // array to store the types of characters to include in our password
+    for (let i = 0; i < userOptions.passLength - fixedChar; i++) {
       if (userOptions.specialCharChoice) {
         userPosChars.push(specialChars[randomize(specialChars.length)]);
       }
@@ -176,19 +197,33 @@ function generatePassword() {
       tmpPwd.push(userPosChars[randomize(userPosChars.length)]);
       userPosChars.splice(0, userPosChars.length);
     }
+    for (let i = 0; i < fixedChar; i++) {
+      if (userOptions.specialCharChoice) {
+        userPosChars.push(specialChars[randomize(specialChars.length)]);
+      }
+      if (userOptions.numChoice) {
+        userPosChars.push(
+          numericalChars[randomize(numericalChars.length)].toString()
+        );
+      }
+      if (userOptions.upperCaseChoice) {
+        userPosChars.push(upperCase[randomize(upperCase.length)]);
+      }
+      if (userOptions.lowerCaseChoice) {
+        userPosChars.push(lowerCase[randomize(lowerCase.length)]);
+      }
+      tmpPwd.push(userPosChars[randomize(userPosChars.length)]);
+      userPosChars.splice(0, userPosChars.length);
+    }
+    
   }
-  
+
+  // create a variable to store password
+  // var results = []
   return tmpPwd.join("");
 }
 
-// create a variable to store password
-// var results = []
-
-// array to store the types of characters to include in our password
-// var userPosChars = []
-
 // array to contain atleast one of each chosen type of characters to make sure atleast one of every character is being used (validation)
-// var guarChar = []
 
 // create conditonal statements that add the array of characters into an array of possibloe characters based on our users input
 // need to push our new random characters to the guarenteed characters (look up .concat())
