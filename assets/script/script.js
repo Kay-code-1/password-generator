@@ -81,26 +81,37 @@ var upperCase = [
   "Z",
 ];
 
-// Create a function that prompts the user for the password options
+//Function to get options from users to generate password: Length and choice of Numbers, Letters and Special characters
+
 function getUserOptions() {
-  // Create a var to store the length of password from the user input (look up parseInt())
+  //variable to store password length
 
   var passLength = parseInt(prompt("Enter Password length."));
-  console.log(passLength);
+  console.log("Password length is: " + passLength);
 
-  // create a conditional statement to check if the lenght is an actual number 8 Eight
-  // create a conditional to check if PW lenght is atleast 8 char long
-  // create a conditional to check if PW lenght is lower than 128 chars
+  // Validation to enter numbers only from 8 -128 for password length
 
-  if (passLength < 8 || passLength > 128) {
+  if (isNaN(passLength)) {
+    alert("Enter a number only for password length!");
+    return null;
+  } else if (passLength < 8 || passLength > 128) {
     alert("Please enter a value between 8 and 128!");
     return null;
   } else {
+    alert("Generating password: Please choose from following options!");
+
+    // Variables to store choices for user password: special chars , numbers, lower and upper
+
     numChoice = confirm("Do you want Numbers in password");
     upperCaseChoice = confirm("Do you want Upper Case letters in password");
     lowerCaseChoice = confirm("Do you want Lower Case letters in password");
     specialCharChoice = confirm("Do you want Special Characters in password");
-    console.log(numChoice, upperCaseChoice, lowerCaseChoice, specialCharChoice);
+    console.log(
+      "Choice of Num upper lower special chars: " + numChoice,
+      upperCaseChoice,
+      lowerCaseChoice,
+      specialCharChoice
+    );
     return {
       numChoice: numChoice,
       upperCaseChoice: upperCaseChoice,
@@ -111,44 +122,39 @@ function getUserOptions() {
   }
 }
 
-// Create 4 different condinal statements to store if user password is going to use special chars , numbers, lower and upper
+//Object to store user choices
 
-// create a conditional statment to check if user included some type of character
+var passOptions = {
+  passLength: passLength,
+  numChoice: numChoice,
+  upperCaseChoice: upperCaseChoice,
+  lowerCaseChoice: lowerCaseChoice,
+  specialCharChoice: specialCharChoice,
+};
 
-// Create a variable to store the user input
-
-// create object to store user input
-
-// var passOptions = {
-//   passLength: passLength,
-//   specialChars,
-//   numericalChars,
-//   lowerCase,
-//   upperCase,
-// };
-
-// return out passOptions
-
-//}end function
-
-// Function for getting a random element from an array
-// check out math.random
+//Function to choose random characters from an array
 
 function randomize(max) {
   return Math.floor(Math.random() * max);
 }
 
-// function to generate a password with out user input
+// function to generate a password
+
 function generatePassword() {
-  // create a variable and call our function so we can use data from the previous function.
   var userOptions = getUserOptions();
+
+  //Condition to check if user has selected some options for password generation
+
   if (userOptions === null) {
     return "";
   }
 
+  // Arrays for Temporary password and possible characters
+
   let userPosChars = [];
   const tmpPwd = [];
-  let choiceCount = 0, fixedChar = 0;
+  let choiceCount = 0,
+    fixedChar = 0;
 
   if (userOptions.specialCharChoice) {
     choiceCount++;
@@ -168,6 +174,8 @@ function generatePassword() {
 
   fixedChar = choiceCount > 2 ? choiceCount : 0;
 
+  //Validation to ensure user selects atleast one option for password generation
+
   if (
     !userOptions.specialCharChoice &&
     !userOptions.numChoice &&
@@ -178,7 +186,7 @@ function generatePassword() {
       "Please select atleast one choice among Number, Letters and Special Characters!"
     );
   } else {
-    // array to store the types of characters to include in our password
+    //Generate possible characters array
     for (let i = 0; i < userOptions.passLength - fixedChar; i++) {
       if (userOptions.specialCharChoice) {
         userPosChars.push(specialChars[randomize(specialChars.length)]);
@@ -197,59 +205,38 @@ function generatePassword() {
       tmpPwd.push(userPosChars[randomize(userPosChars.length)]);
       userPosChars.splice(0, userPosChars.length);
     }
-    for (let i = 0; i < fixedChar; i++) {
+
+    console.log("Tmp Password is: " + tmpPwd);
+
+    //Generate a fixed characters array based on user choices
+
+    if (fixedChar > 2) {
       if (userOptions.specialCharChoice) {
-        userPosChars.push(specialChars[randomize(specialChars.length)]);
+        tmpPwd.push(specialChars[randomize(specialChars.length)]);
       }
       if (userOptions.numChoice) {
-        userPosChars.push(
+        tmpPwd.push(
           numericalChars[randomize(numericalChars.length)].toString()
         );
       }
       if (userOptions.upperCaseChoice) {
-        userPosChars.push(upperCase[randomize(upperCase.length)]);
+        tmpPwd.push(upperCase[randomize(upperCase.length)]);
       }
       if (userOptions.lowerCaseChoice) {
-        userPosChars.push(lowerCase[randomize(lowerCase.length)]);
+        tmpPwd.push(lowerCase[randomize(lowerCase.length)]);
       }
-      tmpPwd.push(userPosChars[randomize(userPosChars.length)]);
-      userPosChars.splice(0, userPosChars.length);
     }
-    
+
+    console.log("Tmp Password after is: " + tmpPwd);
   }
 
-  // create a variable to store password
-  // var results = []
   return tmpPwd.join("");
 }
-
-// array to contain atleast one of each chosen type of characters to make sure atleast one of every character is being used (validation)
-
-// create conditonal statements that add the array of characters into an array of possibloe characters based on our users input
-// need to push our new random characters to the guarenteed characters (look up .concat())
-
-// if (userOptions.specialCharacers){
-// take chars and concat
-// take characters and push(randomizationfunction(specialCharacter)) (AFTER WE RANDOMIZE)
-// create conditonal statements that add the array of characters into an array of possibloe characters based on our users input
-// need to push our new random characters to the guarenteed characters (look up .concat())
-
-// create conditonal statements that add the array of characters into an array of possibloe characters based on our users input
-// need to push our new random characters to the guarenteed characters (look up .concat())
-
-// create conditonal statements that add the array of characters into an array of possibloe characters based on our users input
-// need to push our new random characters to the guarenteed characters (look up .concat())
-
-// create a for loop to pluck out random options object and grabing random characters from the array of possible characters and concat them into the results variable
-
-// create another forloop to guarante atleast one character from each possible characters in the rusults
-
-// Take the result look up join() and turn it into a string
-//}
 
 var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
+
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
@@ -258,4 +245,5 @@ function writePassword() {
 }
 
 // Add event listener to generate button
+
 generateBtn.addEventListener("click", writePassword);
