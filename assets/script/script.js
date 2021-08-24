@@ -22,64 +22,71 @@ var specialChars = [
 var numericalChars = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // Array of lowerCase characters (look up .split())
-var lowerCase = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-];
+
+var lowerCase = "abcdefghijklmnopqrstuvwxyz".split("");
+console.log(lowerCase);
+
+var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+console.log(upperCase);
+
+// var lowerCase = [
+//   "a",
+//   "b",
+//   "c",
+//   "d",
+//   "e",
+//   "f",
+//   "g",
+//   "h",
+//   "i",
+//   "j",
+//   "k",
+//   "l",
+//   "m",
+//   "n",
+//   "o",
+//   "p",
+//   "q",
+//   "r",
+//   "s",
+//   "t",
+//   "u",
+//   "v",
+//   "w",
+//   "x",
+//   "y",
+//   "z",
+// ];
 
 // Array of upperCase characters (look up .split())
-var upperCase = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+// var upperCase = [
+//   "A",
+//   "B",
+//   "C",
+//   "D",
+//   "E",
+//   "F",
+//   "G",
+//   "H",
+//   "I",
+//   "J",
+//   "K",
+//   "L",
+//   "M",
+//   "N",
+//   "O",
+//   "P",
+//   "Q",
+//   "R",
+//   "S",
+//   "T",
+//   "U",
+//   "V",
+//   "W",
+//   "X",
+//   "Y",
+//   "Z",
+// ];
 
 //Function to get options from users to generate password: Length and choice of Numbers, Letters and Special characters
 
@@ -112,12 +119,13 @@ function getUserOptions() {
       lowerCaseChoice,
       specialCharChoice
     );
+    //The user choice options for password generattion are returned to the Object - PassOptions
     return {
+      passLength: passLength,
       numChoice: numChoice,
       upperCaseChoice: upperCaseChoice,
       lowerCaseChoice: lowerCaseChoice,
       specialCharChoice: specialCharChoice,
-      passLength: passLength,
     };
   }
 }
@@ -141,6 +149,7 @@ function randomize(max) {
 // function to generate a password
 
 function generatePassword() {
+  //The function call to "getUserOptions" on choice of password type
   var userOptions = getUserOptions();
 
   //Condition to check if user has selected some options for password generation
@@ -151,11 +160,13 @@ function generatePassword() {
 
   // Arrays for Temporary password and possible characters
 
-  let userPosChars = [];
+  //An array of possible characters and temporary password is generated initially, based on user options
+  var userPosChars = [];
   const tmpPwd = [];
-  let choiceCount = 0,
+  var choiceCount = 0,
     fixedChar = 0;
 
+  //Choice count is incremented based on choice of each type of characters - Numbers, Uppercase, Lowercase and Special characters
   if (userOptions.specialCharChoice) {
     choiceCount++;
   }
@@ -172,7 +183,13 @@ function generatePassword() {
     choiceCount++;
   }
 
-  fixedChar = choiceCount > 2 ? choiceCount : 0;
+  if(choiceCount > 2) {
+    fixedChar = choiceCount;
+  } else {
+    fixedChar = 0;
+  }
+
+  //fixedChar = choiceCount > 2 ? choiceCount : 0;
 
   //Validation to ensure user selects atleast one option for password generation
 
@@ -188,6 +205,7 @@ function generatePassword() {
   } else {
     //Generate possible characters array
     for (let i = 0; i < userOptions.passLength - fixedChar; i++) {
+      //Push the Special characters/ Numbers etc to the "Possible Characters" Array based on user choices - stored in "UserOptions" object
       if (userOptions.specialCharChoice) {
         userPosChars.push(specialChars[randomize(specialChars.length)]);
       }
@@ -202,13 +220,15 @@ function generatePassword() {
       if (userOptions.lowerCaseChoice) {
         userPosChars.push(lowerCase[randomize(lowerCase.length)]);
       }
+
+      //Store the Possible Characters array to tmpPwd Array
       tmpPwd.push(userPosChars[randomize(userPosChars.length)]);
       userPosChars.splice(0, userPosChars.length);
     }
 
     console.log("Tmp Password is: " + tmpPwd);
 
-    //Generate a fixed characters array based on user choices
+    //Push the random strings to tmpPwd array based on user choices to ensure that atleast 1 character from each array - Numbers, Characters is added to the password. 
 
     if (fixedChar > 2) {
       if (userOptions.specialCharChoice) {
